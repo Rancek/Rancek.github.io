@@ -53,3 +53,8 @@ El CV actualizado está en `assets/CV_Elias_Medel_Rancek_2026.pdf`, con enlaces 
 Al abrir el sitio sin un enlace a una sección se muestra una bienvenida con el botón Comenzar. El botón o la tecla Escape abren el portafolio. Los enlaces directos a secciones omiten la bienvenida. La animación respeta movimiento reducido y el sitio sigue accesible sin JavaScript.
 
 Al pulsar Comenzar aparecen los iconos de Maya, Blender, ZBrush, Photoshop, Premiere Pro, After Effects y Unity extraídos visualmente del banner original. La transición dura unos 3,5 segundos y puede omitirse con Entrar ahora o Escape. Con movimiento reducido se entra directamente.
+
+
+Avatar de bienvenida editado con ImageGen integrado a partir del banner. Instrucción: aislar el avatar con escudo y audífonos, quitar RANCEK y demás texto, conservar identidad y luz azul sobre fondo oscuro. Iconos vectoriales procedentes de Devicon y SVG Repo (ZBrush), guardados localmente; fuentes en assets/icons/sources.json. Los logotipos pertenecen a sus respectivas marcas.
+
+Los logos de la bienvenida se reúnen alrededor del avatar y luego salen expulsados en siete direcciones, con giro y profundidad, antes de mostrar el perfil. La secuencia conserva Entrar ahora, Escape y la preferencia de movimiento reducido.

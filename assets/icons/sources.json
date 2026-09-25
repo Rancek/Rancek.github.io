@@ -1,0 +1,30 @@
+[
+  {
+    "application": "maya",
+    "source": "https://raw.githubusercontent.com/devicons/devicon/master/icons/maya/maya-original.svg"
+  },
+  {
+    "application": "blender",
+    "source": "https://raw.githubusercontent.com/devicons/devicon/master/icons/blender/blender-original.svg"
+  },
+  {
+    "application": "zbrush",
+    "source": "https://www.svgrepo.com/show/508998/zbrush.svg"
+  },
+  {
+    "application": "photoshop",
+    "source": "https://raw.githubusercontent.com/devicons/devicon/master/icons/photoshop/photoshop-original.svg"
+  },
+  {
+    "application": "premierepro",
+    "source": "https://raw.githubusercontent.com/devicons/devicon/master/icons/premierepro/premierepro-original.svg"
+  },
+  {
+    "application": "aftereffects",
+    "source": "https://raw.githubusercontent.com/devicons/devicon/master/icons/aftereffects/aftereffects-original.svg"
+  },
+  {
+    "application": "unity",
+    "source": "https://raw.githubusercontent.com/devicons/devicon/master/icons/unity/unity-original.svg"
+  }
+]
