@@ -44,6 +44,6 @@ El examen de modelado está basado en un dibujo existente de Dragon Ball. El dis
 El banner es un recurso de identidad visual proporcionado en el perfil, no una muestra atribuida a cada proyecto. No se aplica una licencia general a los recursos de terceros.
 
 
-## Currículum descargable
+## Currículum en PDF
 
-El CV actualizado está en `assets/CV_Elias_Medel_Rancek_2026.pdf`, con botones de descarga en Inicio y Contacto. Para actualizarlo, reemplaza ese PDF conservando el nombre. Para publicar este cambio, sube `index.html`, `styles.css` y el PDF de `assets/` al repositorio.
+El CV actualizado está en `assets/CV_Elias_Medel_Rancek_2026.pdf`, con enlaces «Ver currículum (PDF)» en Inicio y Contacto que abren el documento en una pestaña nueva. Para actualizarlo, reemplaza ese PDF conservando el nombre. Para publicar este cambio, sube `index.html`, `styles.css` y el PDF de `assets/` al repositorio.
