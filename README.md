@@ -47,3 +47,9 @@ El banner es un recurso de identidad visual proporcionado en el perfil, no una m
 ## Currículum en PDF
 
 El CV actualizado está en `assets/CV_Elias_Medel_Rancek_2026.pdf`, con enlaces «Ver currículum (PDF)» en Inicio y Contacto que abren el documento en una pestaña nueva. Para actualizarlo, reemplaza ese PDF conservando el nombre. Para publicar este cambio, sube `index.html`, `styles.css` y el PDF de `assets/` al repositorio.
+
+
+## Bienvenida animada
+Al abrir el sitio sin un enlace a una sección se muestra una bienvenida con el botón Comenzar. El botón o la tecla Escape abren el portafolio. Los enlaces directos a secciones omiten la bienvenida. La animación respeta movimiento reducido y el sitio sigue accesible sin JavaScript.
+
+Al pulsar Comenzar aparecen los iconos de Maya, Blender, ZBrush, Photoshop, Premiere Pro, After Effects y Unity extraídos visualmente del banner original. La transición dura unos 3,5 segundos y puede omitirse con Entrar ahora o Escape. Con movimiento reducido se entra directamente.

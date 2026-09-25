@@ -44,3 +44,34 @@ if ("IntersectionObserver" in window) {
   }, { rootMargin: "-20% 0px -55% 0px", threshold: 0 });
   document.querySelectorAll("main section[id]").forEach(section => observer.observe(section));
 }
+
+// Direct section links bypass the welcome screen.
+const welcome = document.querySelector('.welcome');
+if (welcome && typeof welcome.showModal === 'function' && !location.hash) {
+  const start = welcome.querySelector('.welcome-start');
+  let entering = false, done = false, launchTimer, closeTimer;
+  function finish() {
+    if (done) return;
+    done = true;
+    clearTimeout(launchTimer); clearTimeout(closeTimer);
+    welcome.close();
+    const heading = document.querySelector('#inicio h1');
+    heading.setAttribute('tabindex','-1');
+    heading.focus({preventScroll:true});
+    window.scrollTo({top:0,behavior:'instant'});
+  }
+  function enterPortfolio() {
+    if (entering || matchMedia('(prefers-reduced-motion: reduce)').matches) { finish(); return; }
+    entering = true;
+    welcome.classList.add('launching');
+    welcome.querySelector('.launch-status').textContent = 'Entrando al portafolio…';
+    start.textContent = 'Entrar ahora';
+    launchTimer = setTimeout(()=>{
+      welcome.classList.add('leaving');
+      closeTimer = setTimeout(finish,450);
+    },3100);
+  }
+  start.addEventListener('click',enterPortfolio);
+  welcome.addEventListener('cancel',event=>{event.preventDefault();finish();});
+  welcome.showModal(); start.focus({preventScroll:true});
+}
