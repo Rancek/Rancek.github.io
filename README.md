@@ -61,4 +61,7 @@ Los logos de la bienvenida se reúnen alrededor del avatar y luego salen expulsa
 
 
 ## Sonido y marcos luminosos
-Pulsa Activar sonido para permitir efectos sintetizados originales de sable y bláster (no grabaciones de películas). El botón permite silenciarlos en cualquier momento. Comenzar reproduce un sable al pasar el puntero; los logos reproducen disparos al salir y los marcos alternan sonidos aleatorios. El sonido está apagado al cargar. La luz recorre los bordes y permanece estática con movimiento reducido.
+Pulsa Activar sonido para permitir los archivos MP3 proporcionados por Elias: sable-de-luz.mp3 y blaster.mp3. El botón permite silenciarlos en cualquier momento. Comenzar reproduce un sable al pasar el puntero; los logos reproducen disparos al salir y los marcos alternan sonidos aleatorios. El sonido está apagado al cargar. La luz recorre los bordes y permanece estática con movimiento reducido.
+
+
+Los archivos de audio originales se conservan sin modificaciones en assets/audio/. Sable de luz se utiliza al pasar por Comenzar; Blaster acompaña la expulsión de los logos; ambos se eligen al azar al pasar por los marcos. Activa el sonido con su botón. La vista previa del audio requiere abrir el sitio mediante un servidor local o GitHub Pages.

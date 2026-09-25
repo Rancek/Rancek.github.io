@@ -76,38 +76,37 @@ if (welcome && typeof welcome.showModal === 'function' && !location.hash) {
   welcome.showModal(); start.focus({preventScroll:true});
 }
 
-// Original synthesized sci-fi effects; audio starts only after user activation.
+// User-supplied MP3 effects; no synthesized replacement sounds.
 const audioFX = (() => {
-  let ctx, master, enabled = false, lastHover = 0;
-  const controls = [...document.querySelectorAll('.sound-toggle')];
-  function update() {
-    controls.forEach(b=>{b.textContent=enabled?'Sonido: activado':'Activar sonido';b.setAttribute('aria-pressed',String(enabled));});
+  let ctx, master, enabled=false, loading=false, buffers, lastHover=0;
+  const voices=new Set(), controls=[...document.querySelectorAll('.sound-toggle')];
+  function update() {controls.forEach(b=>{b.textContent=loading?'Cargando audio…':enabled?'Sonido: activado':'Activar sonido';b.disabled=loading;b.setAttribute('aria-pressed',String(enabled));});}
+  function stop() {for(const voice of voices){try{voice.stop();}catch{}}voices.clear();}
+  function tone(type) {
+    if(!enabled||!buffers||ctx.state!=='running'||document.hidden)return;
+    // Bound simultaneous playback so rapid hover and the burst remain comfortable.
+    if(voices.size>=3){const oldest=voices.values().next().value;oldest.stop();voices.delete(oldest);}
+    const source=ctx.createBufferSource();source.buffer=buffers[type];source.connect(master);
+    voices.add(source);source.onended=()=>{voices.delete(source);source.disconnect();};source.start();
   }
-  function tone(type,delay=0) {
-    if (!enabled || !ctx || ctx.state!=='running' || document.hidden) return;
-    const t=ctx.currentTime+delay, length=type==='saber'?.48:.22;
-    const oscillator=ctx.createOscillator(), gain=ctx.createGain(), filter=ctx.createBiquadFilter();
-    oscillator.type=type==='saber'?'sawtooth':'square';
-    oscillator.frequency.setValueAtTime(type==='saber'?75:1500+Math.random()*700,t);
-    if(type==='saber') {oscillator.frequency.exponentialRampToValueAtTime(230,t+.15);oscillator.frequency.exponentialRampToValueAtTime(65,t+length);}
-    else oscillator.frequency.exponentialRampToValueAtTime(65,t+length);
-    filter.type='lowpass';filter.frequency.setValueAtTime(type==='saber'?650:2600,t);
-    filter.frequency.exponentialRampToValueAtTime(140,t+length);
-    gain.gain.setValueAtTime(.001,t);gain.gain.exponentialRampToValueAtTime(type==='saber'?.11:.075,t+.012);gain.gain.exponentialRampToValueAtTime(.001,t+length);
-    oscillator.connect(filter);filter.connect(gain);gain.connect(master);
-    oscillator.start(t);oscillator.stop(t+length+.02);
-    oscillator.onended=()=>{oscillator.disconnect();filter.disconnect();gain.disconnect();};
-  }
-  controls.forEach(b=>b.addEventListener('click',async()=>{
+  controls.forEach(button=>button.addEventListener('click',async()=>{
+    if(loading)return;
+    if(enabled){enabled=false;stop();update();return;}
     try {
-      if(!ctx) {const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio) throw Error();ctx=new Audio();master=ctx.createGain();master.connect(ctx.destination);}
-      if(ctx.state==='suspended') await ctx.resume();
-      enabled=!enabled;master.gain.setValueAtTime(enabled?.65:0,ctx.currentTime);update();
-      if(enabled)tone('saber');
-    } catch {controls.forEach(c=>{c.textContent='Audio indisponible';c.disabled=true;});}
+      const Audio=window.AudioContext||window.webkitAudioContext;
+      if(!ctx){ctx=new Audio();master=ctx.createGain();master.gain.value=.3;master.connect(ctx.destination);}
+      loading=true;update();await ctx.resume();
+      if(!buffers){
+        const pairs=await Promise.all([['saber','assets/audio/sable-de-luz.mp3'],['blaster','assets/audio/blaster.mp3']].map(async([key,url])=>{
+          const response=await fetch(url);if(!response.ok)throw Error('audio unavailable');
+          return [key,await ctx.decodeAudioData(await response.arrayBuffer())];
+        }));buffers=Object.fromEntries(pairs);
+      }
+      enabled=true;loading=false;update();
+    }catch{loading=false;enabled=false;update();controls.forEach(b=>b.textContent='Reintentar audio');}
   }));
-  function hover(type) {const now=performance.now();if(now-lastHover<420)return;lastHover=now;tone(type);}
-  document.addEventListener('visibilitychange',()=>{if(ctx&&master)master.gain.setValueAtTime(enabled&&!document.hidden?.65:0,ctx.currentTime);});
+  function hover(type){const now=performance.now();if(now-lastHover<500)return;lastHover=now;tone(type);}
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
   return {tone,hover};
 })();
 document.querySelector('.welcome-start')?.addEventListener('pointerenter',()=>audioFX.hover('saber'));
