@@ -58,3 +58,7 @@ Al pulsar Comenzar aparecen los iconos de Maya, Blender, ZBrush, Photoshop, Prem
 Avatar de bienvenida editado con ImageGen integrado a partir del banner. Instrucción: aislar el avatar con escudo y audífonos, quitar RANCEK y demás texto, conservar identidad y luz azul sobre fondo oscuro. Iconos vectoriales procedentes de Devicon y SVG Repo (ZBrush), guardados localmente; fuentes en assets/icons/sources.json. Los logotipos pertenecen a sus respectivas marcas.
 
 Los logos de la bienvenida se reúnen alrededor del avatar y luego salen expulsados en siete direcciones, con giro y profundidad, antes de mostrar el perfil. La secuencia conserva Entrar ahora, Escape y la preferencia de movimiento reducido.
+
+
+## Sonido y marcos luminosos
+Pulsa Activar sonido para permitir efectos sintetizados originales de sable y bláster (no grabaciones de películas). El botón permite silenciarlos en cualquier momento. Comenzar reproduce un sable al pasar el puntero; los logos reproducen disparos al salir y los marcos alternan sonidos aleatorios. El sonido está apagado al cargar. La luz recorre los bordes y permanece estática con movimiento reducido.
