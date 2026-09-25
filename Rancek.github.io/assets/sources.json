@@ -1,0 +1,42 @@
+[
+  {
+    "file": "assets/banner.png",
+    "source": "https://github.com/Rancek/Rancek/blob/main/Imagen%20de%20Codex%2023%20sept%202026,%2000_58_26.png",
+    "bytes": 2570459
+  },
+  {
+    "file": "assets/conari.png",
+    "source": "https://github.com/Rancek/Rancek/blob/main/estudios%20conari.png",
+    "bytes": 26053
+  },
+  {
+    "file": "assets/modelado.gif",
+    "source": "https://github.com/Rancek/Modelos-3D/blob/main/Examen_modelado.gif",
+    "bytes": 2444480
+  },
+  {
+    "file": "assets/casa.gif",
+    "source": "https://github.com/Rancek/Modelos-3D/blob/main/Casa.gif",
+    "bytes": 3749031
+  },
+  {
+    "file": "assets/lipsync.gif",
+    "source": "https://github.com/Rancek/Animaciones-3D/blob/main/Animacion_y_Lipsync.gif",
+    "bytes": 558121
+  },
+  {
+    "file": "assets/caminar.gif",
+    "source": "https://github.com/Rancek/Animaciones-3D/blob/main/Test_caminar.gif",
+    "bytes": 3048061
+  },
+  {
+    "file": "assets/vfx.gif",
+    "source": "https://github.com/Rancek/Efectos/blob/main/examen_vfx_final.gif",
+    "bytes": 12572205
+  },
+  {
+    "file": "assets/personajes.jpg",
+    "source": "https://github.com/Rancek/Dibujos-de-Personajes/blob/main/bebe_rotacion.jpg",
+    "bytes": 96758
+  }
+]
