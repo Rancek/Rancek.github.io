@@ -42,3 +42,8 @@ Los trabajos proceden de los repositorios públicos de Rancek y se presentan com
 El examen de modelado está basado en un dibujo existente de Dragon Ball. El diseño y personaje original pertenecen a sus autores y titulares. La contribución indicada de Elias Medel es el modelado 3D académico. Este aviso no constituye una autorización de uso de derechos de terceros.
 
 El banner es un recurso de identidad visual proporcionado en el perfil, no una muestra atribuida a cada proyecto. No se aplica una licencia general a los recursos de terceros.
+
+
+## Currículum descargable
+
+El CV actualizado está en `assets/CV_Elias_Medel_Rancek_2026.pdf`, con botones de descarga en Inicio y Contacto. Para actualizarlo, reemplaza ese PDF conservando el nombre. Para publicar este cambio, sube `index.html`, `styles.css` y el PDF de `assets/` al repositorio.
