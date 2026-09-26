@@ -138,3 +138,20 @@ document.querySelector('.welcome')?.addEventListener('animationstart',event=>{
   const timer=setTimeout(()=>{if(welcome.open&&welcome.classList.contains('launching'))audioFX.tone('blaster');},1460);
   welcome.addEventListener('close',()=>clearTimeout(timer),{once:true});
 });
+
+// Animate displacement only while the pointer is above the banner.
+(() => {
+  const banner=document.querySelector('.banner'),noise=document.querySelector('#banner-wave feTurbulence'),displacement=document.querySelector('#banner-wave feDisplacementMap');
+  if(!banner||!noise||!displacement)return;
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+  let raf=0,start=0,active=false,lastFrame=0;
+  function stop(){active=false;cancelAnimationFrame(raf);banner.classList.remove('is-waving');displacement.setAttribute('scale','0');banner.style.setProperty('--cloth-x','0deg');banner.style.setProperty('--cloth-y','0deg');}
+  function tick(now){
+    if(!active)return;
+    if(now-lastFrame>32){const t=(now-start)/1000;const strength=Math.min(t*2,1);displacement.setAttribute('scale',String((9+Math.sin(t*2)*3)*strength));noise.setAttribute('baseFrequency',`${.006+Math.sin(t*1.6)*.002} ${.022+Math.cos(t*1.2)*.005}`);lastFrame=now;}
+    raf=requestAnimationFrame(tick);
+  }
+  banner.addEventListener('pointerenter',e=>{if(e.pointerType==='touch'||reduce.matches)return;active=true;start=performance.now();banner.classList.add('is-waving');raf=requestAnimationFrame(tick);});
+  banner.addEventListener('pointermove',e=>{if(!active)return;const r=banner.getBoundingClientRect();banner.style.setProperty('--cloth-x',`${(0.5-(e.clientY-r.top)/r.height)*3}deg`);banner.style.setProperty('--cloth-y',`${((e.clientX-r.left)/r.width)*-2}deg`);});
+  banner.addEventListener('pointerleave',stop);banner.addEventListener('pointercancel',stop);window.addEventListener('blur',stop);reduce.addEventListener('change',stop);document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+})();
