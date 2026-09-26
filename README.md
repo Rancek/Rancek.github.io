@@ -65,3 +65,7 @@ Pulsa Activar sonido para permitir los archivos MP3 proporcionados por Elias: sa
 
 
 Los archivos de audio originales se conservan sin modificaciones en assets/audio/. Sable de luz se utiliza al pasar por Comenzar; Blaster acompaña la expulsión de los logos; ambos se eligen al azar al pasar por los marcos. Activa el sonido con su botón. La vista previa del audio requiere abrir el sitio mediante un servidor local o GitHub Pages.
+
+Los sonidos de Comenzar y de los marcos se detienen al retirar el puntero. Al volver a entrar se reproducen desde el principio. Comenzar también detiene su sable al hacer clic; los blásteres de la transición conservan su sincronización independiente.
+
+Audios actualizados a las versiones proporcionadas sable de luz_final.mp3 y Blaster_Final.mp3, conservados íntegros bajo los nombres de assets/audio/.

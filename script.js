@@ -78,7 +78,7 @@ if (welcome && typeof welcome.showModal === 'function' && !location.hash) {
 
 // User-supplied MP3 effects; no synthesized replacement sounds.
 const audioFX = (() => {
-  let ctx, master, enabled=false, loading=false, buffers, lastHover=0;
+  let ctx, master, enabled=false, loading=false, buffers;
   const voices=new Set(), controls=[...document.querySelectorAll('.sound-toggle')];
   function update() {controls.forEach(b=>{b.textContent=loading?'Cargando audio…':enabled?'Sonido: activado':'Activar sonido';b.disabled=loading;b.setAttribute('aria-pressed',String(enabled));});}
   function stop() {for(const voice of voices){try{voice.stop();}catch{}}voices.clear();}
@@ -87,7 +87,7 @@ const audioFX = (() => {
     // Bound simultaneous playback so rapid hover and the burst remain comfortable.
     if(voices.size>=3){const oldest=voices.values().next().value;oldest.stop();voices.delete(oldest);}
     const source=ctx.createBufferSource();source.buffer=buffers[type];source.connect(master);
-    voices.add(source);source.onended=()=>{voices.delete(source);source.disconnect();};source.start();
+    voices.add(source);source.onended=()=>{voices.delete(source);source.disconnect();};source.start();return source;
   }
   controls.forEach(button=>button.addEventListener('click',async()=>{
     if(loading)return;
@@ -97,7 +97,7 @@ const audioFX = (() => {
       if(!ctx){ctx=new Audio();master=ctx.createGain();master.gain.value=.3;master.connect(ctx.destination);}
       loading=true;update();await ctx.resume();
       if(!buffers){
-        const pairs=await Promise.all([['saber','assets/audio/sable-de-luz.mp3'],['blaster','assets/audio/blaster.mp3']].map(async([key,url])=>{
+        const pairs=await Promise.all([['saber','assets/audio/sable-de-luz.mp3?v=final10'],['blaster','assets/audio/blaster.mp3?v=final10']].map(async([key,url])=>{
           const response=await fetch(url);if(!response.ok)throw Error('audio unavailable');
           return [key,await ctx.decodeAudioData(await response.arrayBuffer())];
         }));buffers=Object.fromEntries(pairs);
@@ -105,15 +105,32 @@ const audioFX = (() => {
       enabled=true;loading=false;update();
     }catch{loading=false;enabled=false;update();controls.forEach(b=>b.textContent='Reintentar audio');}
   }));
-  function hover(type){const now=performance.now();if(now-lastHover<500)return;lastHover=now;tone(type);}
+  function stopVoice(source){if(!source)return;try{source.stop();}catch{}voices.delete(source);}
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
-  return {tone,hover};
+  return {tone,stopVoice};
 })();
-document.querySelector('.welcome-start')?.addEventListener('pointerenter',()=>audioFX.hover('saber'));
-document.querySelector('.welcome-start')?.addEventListener('focus',()=>audioFX.hover('saber'));
+// Hover audio belongs to its element and stops immediately on pointer exit.
+function attachHoverSound(element,chooseSound) {
+  let voice;
+  const end=()=>{audioFX.stopVoice(voice);voice=undefined;};
+  element.addEventListener('pointerenter',event=>{
+    if(event.pointerType==='touch')return;
+    end();voice=audioFX.tone(chooseSound());
+  });
+  element.addEventListener('pointerleave',end);
+  element.addEventListener('pointercancel',end);
+  window.addEventListener('blur',end);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)end();});
+  return end;
+}
+const startSoundButton=document.querySelector('.welcome-start');
+if(startSoundButton){
+  const end=attachHoverSound(startSoundButton,()=> 'saber');
+  startSoundButton.addEventListener('click',end);
+  document.querySelector('.welcome')?.addEventListener('close',end);
+}
 document.querySelectorAll('.project-media').forEach(frame=>{
-  frame.addEventListener('pointerenter',()=>audioFX.hover(Math.random()<.5?'saber':'blaster'));
-  frame.addEventListener('focusin',()=>audioFX.hover(Math.random()<.5?'saber':'blaster'));
+  attachHoverSound(frame,()=>Math.random()<.5?'saber':'blaster');
 });
 // Each shot is synchronized with a logo's departure, not its initial appearance.
 document.querySelector('.welcome')?.addEventListener('animationstart',event=>{
