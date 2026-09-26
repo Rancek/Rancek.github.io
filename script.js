@@ -45,9 +45,9 @@ if ("IntersectionObserver" in window) {
   document.querySelectorAll("main section[id]").forEach(section => observer.observe(section));
 }
 
-// Direct section links bypass the welcome screen.
+// The home link also opens the welcome screen.
 const welcome = document.querySelector('.welcome');
-if (welcome && typeof welcome.showModal === 'function' && !location.hash) {
+if (welcome && typeof welcome.showModal === 'function' && (!location.hash || location.hash === '#inicio')) {
   const start = welcome.querySelector('.welcome-start');
   let entering = false, done = false, launchTimer, closeTimer;
   function finish() {
@@ -107,7 +107,7 @@ const audioFX = (() => {
   }));
   function stopVoice(source){if(!source)return;try{source.stop();}catch{}voices.delete(source);}
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
-  return {tone,stopVoice};
+  return {tone,stopVoice,stop};
 })();
 // Hover audio belongs to its element and stops immediately on pointer exit.
 function attachHoverSound(element,chooseSound) {
@@ -132,6 +132,8 @@ if(startSoundButton){
 document.querySelectorAll('.project-media').forEach(frame=>{
   attachHoverSound(frame,()=>Math.random()<.5?'saber':'blaster');
 });
+welcome?.addEventListener('close',()=>audioFX.stop());
+window.addEventListener('blur',()=>audioFX.stop());
 // Each shot is synchronized with a logo's departure, not its initial appearance.
 document.querySelector('.welcome')?.addEventListener('animationstart',event=>{
   if(event.animationName!=='logo-burst')return;
