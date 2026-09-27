@@ -180,6 +180,45 @@ document.querySelector('.welcome')?.addEventListener('animationstart',event=>{
   const reduce=matchMedia('(prefers-reduced-motion: reduce)');
   let width=0,height=0,raf=0,launch=0,previous=0,travel=0;
   const particles=Array.from({length:64},(_,i)=>({angle:i/64*Math.PI*2+(Math.random()-.5)*.12,speed:.45+Math.random()*.75,size:1+Math.random()*2}));
+  // Small wireframe meshes travel at the same depth speed as the tunnel ribs.
+  const meshes=[];
+  const cube=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
+  meshes.push({vertices:cube,edges:[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]]});
+  meshes.push({vertices:[[-1,1,-1],[1,1,-1],[1,1,1],[-1,1,1],[0,-1.4,0]],edges:[[0,1],[1,2],[2,3],[3,0],[0,4],[1,4],[2,4],[3,4]]});
+  function curvedMesh(sphere){
+    const vertices=[],edges=[],segments=16,rows=sphere?7:2;
+    for(let j=0;j<rows;j++){
+      const latitude=-Math.PI/2+(j+1)*Math.PI/(rows+1);
+      const radius=sphere?Math.cos(latitude):.85,y=sphere?Math.sin(latitude):(j?1:-1);
+      for(let k=0;k<segments;k++){
+        const a=k/segments*Math.PI*2,index=vertices.length;
+        vertices.push([radius*Math.cos(a),y,radius*Math.sin(a)]);
+        edges.push([index,j*segments+(k+1)%segments]);
+        if(j&&(sphere?k%4===0:k%4===0))edges.push([index,index-segments]);
+      }
+    }
+    return {vertices,edges};
+  }
+  meshes.push(curvedMesh(true),curvedMesh(false));
+  const objects=Array.from({length:24},(_,i)=>({mesh:meshes[i%4],depth:i/24,angle:i*2.39996,size:.55+(i*7%11)/10,spin:i*.71}));
+  function drawObjects(cx,cy,base){
+    objects.map(o=>({...o,z:(o.depth+travel)%1})).sort((a,b)=>a.z-b.z).forEach(o=>{
+      const perspective=1/(1-o.z+.08),radius=base*.105*perspective;
+      const x=cx+Math.cos(o.angle)*radius,y=cy+Math.sin(o.angle)*radius;
+      const size=Math.min(width,height)*.011*o.size*perspective;
+      if(x+size<0||x-size>width||y+size<0||y-size>height)return;
+      const angle=o.spin+travel*.7,cos=Math.cos(angle),sin=Math.sin(angle);
+      const points=o.mesh.vertices.map(([vx,vy,vz])=>{
+        const rx=vx*cos+vz*sin,rz=-vx*sin+vz*cos;
+        const ry=vy*.92-rz*.39;
+        return [x+rx*size,y+ry*size];
+      });
+      ctx.save();ctx.strokeStyle=o.mesh===meshes[1]?'#519fff':'#67e3ff';
+      ctx.globalAlpha=Math.min(.65,o.z*.8+.1);ctx.lineWidth=.7+o.z*.8;
+      ctx.shadowColor='#119cff';ctx.shadowBlur=o.z> .55?7:0;
+      ctx.beginPath();o.mesh.edges.forEach(([a,b])=>{ctx.moveTo(...points[a]);ctx.lineTo(...points[b]);});ctx.stroke();ctx.restore();
+    });
+  }
   function resize(){width=innerWidth;height=innerHeight;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=width*dpr;canvas.height=height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
   function draw(now){
     raf=0;if(!welcome.open||document.hidden)return;
@@ -203,6 +242,7 @@ document.querySelector('.welcome')?.addEventListener('animationstart',event=>{
       ctx.strokeStyle=`rgba(56,185,255,${.07+depth*.3})`;ctx.lineWidth=1+depth*1.4;
       ctx.beginPath();points.forEach(([x,y],j)=>j?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();ctx.stroke();
     }
+    drawObjects(cx,cy,base);
     if(rush>0&&rush<1.6){
       const fade=Math.max(0,1-rush/1.6),distance=Math.hypot(width,height)*rush;
       ctx.save();ctx.globalCompositeOperation='lighter';
