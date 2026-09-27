@@ -49,3 +49,8 @@
 .welcome.launching .intro-tunnel{animation:tunnel-entry 3.55s ease-in both;transform-origin:50% 45%}
 @keyframes tunnel-entry{0%,40%{transform:scale(1);opacity:.9}85%{opacity:1}100%{transform:scale(2.8);opacity:0}}
 @media(prefers-reduced-motion:reduce){.welcome.launching .intro-tunnel{animation:none}}
+
+/* Preserve the original avatar and neon controls above the detailed 3D scene. */
+.intro-models{position:fixed;inset:0;pointer-events:none;z-index:1}
+.models-ready .intro-tunnel,.models-ready .welcome-grid,.models-ready .welcome-orbit{display:none}
+.models-ready .launch-apps{visibility:hidden}

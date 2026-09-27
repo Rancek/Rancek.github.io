@@ -221,7 +221,7 @@ document.querySelector('.welcome')?.addEventListener('animationstart',event=>{
   }
   function resize(){width=innerWidth;height=innerHeight;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=width*dpr;canvas.height=height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
   function draw(now){
-    raf=0;if(!welcome.open||document.hidden)return;
+    raf=0;if(!welcome.open||document.hidden||welcome.classList.contains('models-ready'))return;
     const dt=Math.min((now-(previous||now))/1000,.05);previous=now;
     const elapsed=launch?(now-launch)/1000:0;
     const rush=Math.max(0,elapsed-1.46);
