@@ -42,3 +42,10 @@
 @keyframes avatar-clear-exit{0%,65%{opacity:1}100%{opacity:0}}
 @media(max-width:600px){.welcome.launching .welcome-avatar{width:100px}.welcome.launching .launch-app{width:64px;min-height:80px;padding:8px 3px}.welcome.launching .launch-icon{width:40px;height:40px}}
 @media(max-height:520px){.welcome.launching .welcome-avatar{width:80px}.welcome.launching .launch-app{width:60px;min-height:62px;padding:4px;gap:4px}.welcome.launching .launch-icon{width:32px;height:32px}.launch-app:nth-child(1){--near-x:-150px;--near-y:-75px}.launch-app:nth-child(2){--near-x:0px;--near-y:-100px}.launch-app:nth-child(3){--near-x:150px;--near-y:-75px}.launch-app:nth-child(4){--near-x:180px;--near-y:20px}.launch-app:nth-child(5){--near-x:100px;--near-y:100px}.launch-app:nth-child(6){--near-x:-100px;--near-y:100px}.launch-app:nth-child(7){--near-x:-180px;--near-y:20px}.welcome.launching .welcome-start{bottom:18px;min-height:40px}.welcome.launching .launch-status{bottom:65px}}
+
+/* Cyan depth tunnel stays behind the readable welcome content. */
+.intro-tunnel{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1;opacity:.9}
+.welcome-grid,.welcome-orbit{opacity:.2}
+.welcome.launching .intro-tunnel{animation:tunnel-entry 3.55s ease-in both;transform-origin:50% 45%}
+@keyframes tunnel-entry{0%,40%{transform:scale(1);opacity:.9}85%{opacity:1}100%{transform:scale(2.8);opacity:0}}
+@media(prefers-reduced-motion:reduce){.welcome.launching .intro-tunnel{animation:none}}
