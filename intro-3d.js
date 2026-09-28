@@ -1,3 +1,4 @@
+import {loadDragons} from './dragon-model.js';
 import * as T from './assets/vendor/three.module.js';
 import {SVGLoader} from './assets/vendor/SVGLoader.js';
 import {OBJLoader} from './assets/vendor/OBJLoader.js';
@@ -116,7 +117,8 @@ async function buildIntro(){
   model.position.sub(center);const pivot=new T.Group();pivot.add(model);pivot.scale.setScalar(3.6/Math.max(size.x,size.y,size.z));
   const holder=new T.Group();holder.add(pivot);return holder;
  }));
- const makers=[()=>imported[0].clone(true),()=>mammal(),naturalHouse,()=>imported[1].clone(true),()=>mammal(true),bird,naturalChair,naturalBall,()=>imported[2].clone(true)];const props=[];
+ const dragons=await loadDragons(renderer);
+ const makers=[()=>imported[0].clone(true),()=>mammal(),naturalHouse,()=>imported[1].clone(true),()=>mammal(true),bird,naturalChair,naturalBall,()=>imported[2].clone(true),()=>dragons[0].clone(true),()=>dragons[1].clone(true)];const props=[];
  for(let i=0;i<18;i++){const g=makers[i%makers.length]();g.userData={phase:i/18,angle:i*2.39996,size:.8+(i%4)*.14};scene.add(g);props.push(g);}
  const tunnel=[];const railMat=new T.MeshStandardMaterial({color:0x087daa,emissive:0x035078,emissiveIntensity:.4,metalness:.6,roughness:.3});
  for(let i=0;i<18;i++){const ring=new T.Mesh(new T.TorusGeometry(13,.025,6,8),railMat);scene.add(ring);tunnel.push(ring);}
