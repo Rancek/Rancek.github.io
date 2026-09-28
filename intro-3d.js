@@ -1,5 +1,6 @@
 import * as T from './assets/vendor/three.module.js';
 import {SVGLoader} from './assets/vendor/SVGLoader.js';
+import {OBJLoader} from './assets/vendor/OBJLoader.js';
 const intro=document.querySelector('.welcome');
 if(intro){try{await buildIntro();}catch(error){console.warn('La intro conserva su versión original:',error);}}
 async function buildIntro(){
@@ -90,8 +91,33 @@ async function buildIntro(){
  function posedHand(pose){const g=new T.Group();mesh(g,'ball',flesh,[0,0,0],[.43,.48,.18]);mesh(g,'cylinder',flesh,[0,-.61,0],[.25,.43,.17]);
  for(let i=0;i<4;i++){const finger=new T.Group();finger.position.set(-.31+i*.207,.29,0);finger.rotation.z=(1.5-i)*.07;g.add(finger);const bent=pose==='fist'||(pose==='peace'&&i>1)||(pose==='point'&&i>0);let parent=finger;for(let j=0;j<3;j++){const joint=new T.Group();joint.rotation.x=bent?-(j===0?.95:1.25):-.08;parent.add(joint);const length=[.34,.38,.36,.28][i]*(j===2?.7:1);mesh(joint,'ball',flesh,[0,length*.46,0],[.091-j*.012,length*.6,.093-j*.011]);mesh(joint,'ball',flesh,[0,0,0],[.094-j*.012,.085,.092-j*.011]);if(j===2)mesh(joint,'ball',nail,[0,length*.65,.07-j*.01],[.055,.071,.012]);const next=new T.Group();next.position.y=length*.86;joint.add(next);parent=next;}}
  const thumb=new T.Group();thumb.position.set(-.35,-.15,.06);thumb.rotation.z=pose==='fist'?-.2:-.7;thumb.rotation.x=pose==='fist'?-.9:0;mesh(thumb,'ball',flesh,[0,.25,0],[.13,.35,.12]);mesh(thumb,'ball',nail,[0,.46,.105],[.071,.085,.012]);g.add(thumb);return g;}
- const makers=[()=>posedHand('peace'),()=>mammal(),naturalHouse,()=>mammal(true),bird,()=>posedHand('fist'),naturalChair,()=>posedHand('point'),naturalBall,organicHand,naturalPerson,realisticHead,naturalFoot];const props=[];
- for(let i=0;i<26;i++){const g=makers[i%makers.length]();g.userData={phase:i/26,angle:i*2.39996,size:.65+(i%4)*.19};scene.add(g);props.push(g);}
+ // User OBJ files replace all generated human/anatomical props.
+ const objLoader=new OBJLoader();
+ const gunMetal=surface('metal',0x4a5056,.5,.7),polymer=surface('rubber',0x202630,.9,.02);
+ const babySkin=surface('skin',0xd9ad95,.83),eyeWhite=material(0xe6e5df,0,.28);
+ const textureLoader=new T.TextureLoader();
+ const babyTextures=await Promise.all(['cuerpo_textura.png','cara_textura.png','ojos_textura3.svg'].map(async file=>{const t=await textureLoader.loadAsync(`assets/models/${file}`);t.colorSpace=T.SRGBColorSpace;t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());return t;}));
+ const babyMaterials=babyTextures.map((map,i)=>new T.MeshStandardMaterial({map,color:0xffffff,roughness:i===2?.25:i===0?.88:.75,metalness:0}));
+ const [headColor,headNormal]=await Promise.all(['cabeza-color.jpg','cabeza-normal.jpg'].map(file=>textureLoader.loadAsync(`assets/models/${file}`)));
+ headColor.colorSpace=T.SRGBColorSpace;headNormal.colorSpace=T.NoColorSpace;
+ for(const map of [headColor,headNormal])map.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+ const headMaterial=new T.MeshStandardMaterial({map:headColor,normalMap:headNormal,normalMapType:T.TangentSpaceNormalMap,normalScale:new T.Vector2(.65,.65),roughness:.72,metalness:0});
+ const imported=await Promise.all(['M4','bebe','Cabeza'].map(async name=>{
+  const response=await fetch(`assets/models/${name}.obj`);if(!response.ok)throw new Error(`No se pudo cargar ${name}`);
+  const model=objLoader.parse(await response.text());
+  model.traverse(part=>{if(!part.isMesh)return;const convert=old=>{
+   const label=old.name||'';
+   if(name==='Cabeza')return headMaterial;
+   if(name==='M4')return label.includes('lambert4')?polymer:gunMetal;
+   return label.includes('lambert5')?babyMaterials[2]:label.includes('lambert4')?babyMaterials[1]:label.includes('lambert3')?babyMaterials[0]:babySkin;
+  };part.material=Array.isArray(part.material)?part.material.map(convert):convert(part.material);
+  if(!part.geometry.getAttribute('normal'))part.geometry.computeVertexNormals();});
+  const bounds=new T.Box3().setFromObject(model),size=bounds.getSize(new T.Vector3()),center=bounds.getCenter(new T.Vector3());
+  model.position.sub(center);const pivot=new T.Group();pivot.add(model);pivot.scale.setScalar(3.6/Math.max(size.x,size.y,size.z));
+  const holder=new T.Group();holder.add(pivot);return holder;
+ }));
+ const makers=[()=>imported[0].clone(true),()=>mammal(),naturalHouse,()=>imported[1].clone(true),()=>mammal(true),bird,naturalChair,naturalBall,()=>imported[2].clone(true)];const props=[];
+ for(let i=0;i<18;i++){const g=makers[i%makers.length]();g.userData={phase:i/18,angle:i*2.39996,size:.8+(i%4)*.14};scene.add(g);props.push(g);}
  const tunnel=[];const railMat=new T.MeshStandardMaterial({color:0x087daa,emissive:0x035078,emissiveIntensity:.4,metalness:.6,roughness:.3});
  for(let i=0;i<18;i++){const ring=new T.Mesh(new T.TorusGeometry(13,.025,6,8),railMat);scene.add(ring);tunnel.push(ring);}
  const avatar=new T.Group();scene.add(avatar);
