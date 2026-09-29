@@ -54,3 +54,23 @@
 .intro-models{position:fixed;inset:0;pointer-events:none;z-index:1}
 .models-ready .intro-tunnel,.models-ready .welcome-grid,.models-ready .welcome-orbit{display:none}
 .models-ready .launch-apps{visibility:hidden}
+
+/* Complete original Conari artwork: no cropping, blending or mask. */
+.welcome .welcome-avatar{mask-image:none;mix-blend-mode:normal;object-fit:contain;width:min(350px,65vw,42vh);height:auto;filter:drop-shadow(1px 2px 0 #075080) drop-shadow(2px 3px 0 #04345c) drop-shadow(3px 5px 0 #02182f) drop-shadow(0 12px 16px #000b) drop-shadow(0 0 12px #00bfff60)}
+.welcome .welcome-alias{color:#67dfff;line-height:1.7;max-width:650px;margin-inline:auto;text-wrap:balance}
+.welcome #welcome-description{color:#8aeaff;font-weight:700;text-shadow:0 1px 0 #187eaa,0 2px 0 #12628e,0 3px 0 #0a426e,0 4px 0 #052846,0 7px 10px #000,0 0 18px #00bfff65}
+.welcome .welcome-content{margin:auto 0}
+.welcome:not(.launching) .welcome-start{margin-top:42px}
+@media(max-height:650px){.welcome .welcome-avatar{width:min(230px,32vh)}.welcome:not(.launching) .welcome-start{margin-top:26px}.welcome .welcome-alias{font-size:10px}}
+.welcome.launching .welcome-avatar{width:170px}
+@media(max-width:600px){.welcome.launching .welcome-avatar{width:100px}}
+
+.welcome #welcome-description{font-size:clamp(21px,2.6vw,32px)}
+.banner-stage{position:relative;aspect-ratio:2055/765;overflow:hidden;perspective:900px;background:#041122;border-radius:5px}
+.banner-stage .banner-backdrop{width:100%;height:100%;object-fit:cover;display:block}
+.banner-stage .banner-person{position:absolute;left:28%;bottom:-3%;width:45%;height:100%;object-fit:contain;filter:drop-shadow(3px 4px 0 #073258) drop-shadow(0 0 15px #12baff80)}
+.banner-logo{position:absolute;left:var(--x);top:var(--y);width:16%;display:flex;align-items:center;gap:8%;color:#e8faff;font-weight:800;font-size:clamp(8px,1.3vw,19px);text-shadow:1px 2px #123955,2px 3px #061425;opacity:0;transform:translateZ(-700px) scale(.2);filter:drop-shadow(2px 3px 0 #082337) drop-shadow(0 0 8px #20bfff88)}
+.banner-logo img{width:38%;height:auto;max-height:70px;object-fit:contain}.banner-logo span{line-height:1.1}
+.banner-stage.is-revealed .banner-logo{animation:banner-logo-arrive 1.25s cubic-bezier(.2,.65,.2,1) var(--delay) both}
+@keyframes banner-logo-arrive{from{opacity:0;transform:translateZ(-700px) scale(.2) rotateY(-25deg)}to{opacity:1;transform:translateZ(0) scale(1) rotateY(0)}}
+@media(prefers-reduced-motion:reduce){.banner-stage .banner-logo{opacity:1;transform:none;animation:none!important}}

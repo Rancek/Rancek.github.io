@@ -90,9 +90,9 @@ if (welcome && typeof welcome.showModal === 'function' && (!location.hash || loc
 
 // User-supplied MP3 effects; no synthesized replacement sounds.
 const audioFX = (() => {
-  let ctx, master, enabled=false, loading=false, buffers;
+  let ctx, master, enabled=true, loading=false, buffers;
   const voices=new Set(), controls=[...document.querySelectorAll('.sound-toggle')];
-  function update() {controls.forEach(b=>{b.textContent=loading?'Cargando audio…':enabled?'Sonido: activado':'Activar sonido';b.disabled=loading;b.setAttribute('aria-pressed',String(enabled));});}
+  function update() {controls.forEach(b=>{b.textContent=loading?'Cargando audio…':enabled?'Desactivar sonido':'Activar sonido';b.disabled=loading;b.setAttribute('aria-pressed',String(enabled));});}
   function stop() {for(const voice of voices){try{voice.stop();}catch{}}voices.clear();}
   function tone(type) {
     if(!enabled||!buffers||ctx.state!=='running'||document.hidden)return;
@@ -101,22 +101,18 @@ const audioFX = (() => {
     const source=ctx.createBufferSource();source.buffer=buffers[type];source.connect(master);
     voices.add(source);source.onended=()=>{voices.delete(source);source.disconnect();};source.start();return source;
   }
-  controls.forEach(button=>button.addEventListener('click',async()=>{
-    if(loading)return;
-    if(enabled){enabled=false;stop();update();return;}
-    try {
+  async function prepare(){
+    if(loading)return;loading=true;
+    try{
       const Audio=window.AudioContext||window.webkitAudioContext;
       if(!ctx){ctx=new Audio();master=ctx.createGain();master.gain.value=.3;master.connect(ctx.destination);}
-      loading=true;update();await ctx.resume();
-      if(!buffers){
-        const pairs=await Promise.all([['saber','assets/audio/sable-de-luz.mp3?v=final10'],['blaster','assets/audio/blaster.mp3?v=final10']].map(async([key,url])=>{
-          const response=await fetch(url);if(!response.ok)throw Error('audio unavailable');
-          return [key,await ctx.decodeAudioData(await response.arrayBuffer())];
-        }));buffers=Object.fromEntries(pairs);
-      }
-      enabled=true;loading=false;update();
-    }catch{loading=false;enabled=false;update();controls.forEach(b=>b.textContent='Reintentar audio');}
-  }));
+      if(ctx.state!=='running')await ctx.resume();
+      if(!buffers){const pairs=await Promise.all([['saber','assets/audio/sable-de-luz.mp3?v=final10'],['blaster','assets/audio/blaster.mp3?v=final10']].map(async([key,url])=>{const response=await fetch(url);if(!response.ok)throw Error('audio unavailable');return [key,await ctx.decodeAudioData(await response.arrayBuffer())];}));buffers=Object.fromEntries(pairs);}
+    }catch{enabled=false;}finally{loading=false;update();}
+  }
+  controls.forEach(button=>button.addEventListener('click',()=>{enabled=!enabled;if(!enabled)stop();else void prepare();update();}));
+  const unlock=event=>{if(enabled&&!event.target.closest('.sound-toggle'))void prepare();};
+  document.addEventListener('pointerdown',unlock);document.addEventListener('keydown',unlock);update();
   function stopVoice(source){if(!source)return;try{source.stop();}catch{}voices.delete(source);}
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
   return {tone,stopVoice,stop};
@@ -152,23 +148,6 @@ document.querySelector('.welcome')?.addEventListener('animationstart',event=>{
   const timer=setTimeout(()=>{if(welcome.open&&welcome.classList.contains('launching'))audioFX.tone('blaster');},1460);
   welcome.addEventListener('close',()=>clearTimeout(timer),{once:true});
 });
-
-// Animate displacement only while the pointer is above the banner.
-(() => {
-  const banner=document.querySelector('.banner'),noise=document.querySelector('#banner-wave feTurbulence'),displacement=document.querySelector('#banner-wave feDisplacementMap');
-  if(!banner||!noise||!displacement)return;
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
-  let raf=0,start=0,active=false,lastFrame=0;
-  function stop(){active=false;cancelAnimationFrame(raf);banner.classList.remove('is-waving');displacement.setAttribute('scale','0');banner.style.setProperty('--cloth-x','0deg');banner.style.setProperty('--cloth-y','0deg');}
-  function tick(now){
-    if(!active)return;
-    if(now-lastFrame>32){const t=(now-start)/1000;const strength=Math.min(t*2,1);displacement.setAttribute('scale',String((9+Math.sin(t*2)*3)*strength));noise.setAttribute('baseFrequency',`${.006+Math.sin(t*1.6)*.002} ${.022+Math.cos(t*1.2)*.005}`);lastFrame=now;}
-    raf=requestAnimationFrame(tick);
-  }
-  banner.addEventListener('pointerenter',e=>{if(e.pointerType==='touch'||reduce.matches)return;active=true;start=performance.now();banner.classList.add('is-waving');raf=requestAnimationFrame(tick);});
-  banner.addEventListener('pointermove',e=>{if(!active)return;const r=banner.getBoundingClientRect();banner.style.setProperty('--cloth-x',`${(0.5-(e.clientY-r.top)/r.height)*3}deg`);banner.style.setProperty('--cloth-y',`${((e.clientX-r.left)/r.width)*-2}deg`);});
-  banner.addEventListener('pointerleave',stop);banner.addEventListener('pointercancel',stop);window.addEventListener('blur',stop);reduce.addEventListener('change',stop);document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
-})();
 
 // Perspective tunnel and one finite energy burst, paused outside the intro.
 (() => {
@@ -264,3 +243,6 @@ document.querySelector('.welcome')?.addEventListener('animationstart',event=>{
   reduce.addEventListener('change',start);
   resize();start();
 })();
+
+const animatedBanner=document.querySelector('.banner-stage');
+if(animatedBanner){const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)&&!document.querySelector('.welcome[open]')){animatedBanner.classList.add('is-revealed');observer.disconnect();}},{threshold:.25});observer.observe(animatedBanner);welcome?.addEventListener('close',()=>{observer.unobserve(animatedBanner);observer.observe(animatedBanner);});}
