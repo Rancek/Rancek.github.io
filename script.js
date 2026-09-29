@@ -246,3 +246,17 @@ document.querySelector('.welcome')?.addEventListener('animationstart',event=>{
 
 const animatedBanner=document.querySelector('.banner-stage');
 if(animatedBanner){const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)&&!document.querySelector('.welcome[open]')){animatedBanner.classList.add('is-revealed');observer.disconnect();}},{threshold:.25});observer.observe(animatedBanner);welcome?.addEventListener('close',()=>{observer.unobserve(animatedBanner);observer.observe(animatedBanner);});}
+
+// The loading screen stays inside the modal, above the portal's 3D canvas.
+(()=>{
+ if(!welcome)return;
+ const loader=welcome.querySelector('.portal-loader'),bar=loader.querySelector('.loader-meter'),status=loader.querySelector('.loader-status'),track=loader.querySelector('.baby-track'),baby=loader.querySelector('.baby-traveller');
+ let ended=false,spriteReady=false;const started=performance.now();
+ function progress(n){bar.setAttribute('aria-valuenow',String(n));loader.style.setProperty('--load-progress',n+'%');loader.style.setProperty('--baby-x',Math.max(0,track.clientWidth-baby.clientWidth)*n/100+'px');}
+ function finish(){if(ended)return;ended=true;clearInterval(timer);welcome.classList.remove('is-loading');if(welcome.open)welcome.querySelector('.welcome-start').focus({preventScroll:true});}
+ const sprite=new Image();sprite.onload=()=>{spriteReady=true;};sprite.onerror=()=>{spriteReady=true;};sprite.src='assets/baby-walk.png';
+ loader.querySelector('.loader-skip').addEventListener('click',finish);
+ const timer=setInterval(()=>{if(ended)return;const elapsed=performance.now()-started,ready=welcome.classList.contains('models-ready');const target=ready&&spriteReady?100:spriteReady?40:10;progress(Math.min(target,Math.round(elapsed/48)));status.textContent=ready?'Portal listo · ¡Vamos!':'Preparando el portal…';if((ready&&spriteReady&&elapsed>4800)||elapsed>20000){progress(100);status.textContent='¡Entramos al portal!';setTimeout(finish,800);}},100);
+ if(welcome.open)loader.querySelector('.loader-skip').focus({preventScroll:true});else finish();
+ welcome.addEventListener('close',finish,{once:true});
+})();

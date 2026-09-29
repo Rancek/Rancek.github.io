@@ -74,3 +74,17 @@
 .banner-stage.is-revealed .banner-logo{animation:banner-logo-arrive 1.25s cubic-bezier(.2,.65,.2,1) var(--delay) both}
 @keyframes banner-logo-arrive{from{opacity:0;transform:translateZ(-700px) scale(.2) rotateY(-25deg)}to{opacity:1;transform:translateZ(0) scale(1) rotateY(0)}}
 @media(prefers-reduced-motion:reduce){.banner-stage .banner-logo{opacity:1;transform:none;animation:none!important}}
+
+.portal-loader{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 55%,#103451,#070b14 70%);transition:opacity .45s}
+.welcome:not(.is-loading) .portal-loader{display:none}.welcome.is-loading .welcome-content,.welcome.is-loading>.sound-toggle{visibility:hidden}
+.loader-panel{width:min(660px,100%);padding:32px;border:1px solid #277697;border-radius:12px;background:#061323e8;box-shadow:0 8px 0 #020915,0 0 45px #00bcff25,inset 0 1px #8be9ff55;text-align:center}
+.loader-kicker{color:#5adfff;letter-spacing:3px;font-size:11px}.welcome .loader-panel h2{font-size:clamp(22px,4vw,32px);letter-spacing:0;color:#d4f6ff;margin:16px 0}
+.baby-track{height:160px;position:relative;margin:20px 0 0}.baby-traveller{position:absolute;bottom:0;left:0;width:120px;height:145px;transform:translateX(var(--baby-x,0px));transition:transform .7s linear}.baby-walk{width:100%;height:100%;background:url('assets/baby-walk.png') 0 50%/600% 100% no-repeat;animation:baby-steps .8s steps(6) infinite;filter:drop-shadow(0 5px 5px #00bfff55)}
+@keyframes baby-steps{to{background-position:120% 50%}}
+.loader-meter{height:28px;padding:4px;border:2px solid #52dfff;background:#020b16;box-shadow:0 0 18px #00bfff55,inset 0 2px 5px #000;border-radius:4px;overflow:hidden}.loader-fill{height:100%;width:var(--load-progress,0%);background:repeating-linear-gradient(90deg,#50e5ff 0 16px,#0b8ac0 16px 20px);box-shadow:0 0 16px #32e2ff;transition:width .7s linear}
+.loader-status{font-size:13px;color:#91cde7;margin:18px 0}.loader-skip{background:transparent;border:1px solid #306580;color:#c2efff;padding:9px 18px;border-radius:4px;cursor:pointer}.loader-skip:focus-visible{outline:2px solid #72eaff;outline-offset:4px}
+@media(max-width:500px){.loader-panel{padding:22px 16px}.baby-track{height:130px}.baby-traveller{width:100px;height:120px}}
+@media(prefers-reduced-motion:reduce){.baby-walk{animation:none}.baby-traveller,.loader-fill{transition:none}}
+.baby-traveller{width:90px;height:180px;bottom:-22px}@media(max-width:500px){.baby-traveller{width:75px;height:150px;bottom:-18px}}
+
+.welcome .loader-panel h2{animation:none;filter:none;opacity:1;transform:none}
