@@ -1,0 +1,13 @@
+import * as T from './assets/vendor/three.module.js';
+export function createDragonAssembly(parent){
+ const renderer=new T.WebGLRenderer({alpha:true,antialias:true});renderer.setSize(1000,650);renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.domElement.className='dragon-assembly';parent.append(renderer.domElement);
+ const scene=new T.Scene(),camera=new T.OrthographicCamera(-500,500,325,-325,.1,2000);camera.position.z=700;
+ scene.add(new T.HemisphereLight(0xd4faff,0x08244f,2.5));const light=new T.DirectionalLight(0xb5efff,3);light.position.set(-180,200,300);scene.add(light);
+ const materials=[0x1388cc,0x53daff,0x1761a8,0x8aedff].map(color=>new T.MeshStandardMaterial({color,metalness:.45,roughness:.28,transparent:true}));
+ const geometries=[new T.SphereGeometry(1,20,14),new T.CylinderGeometry(1,1,2,16),new T.BoxGeometry(2,2,2),new T.ConeGeometry(1,2,4)];
+ // Target positions follow the original sprite: head, chest, wings, feet and curled tail.
+ const layout=[[0,-52,9,23,23],[0,-67,3,15,12],[2,-80,0,11,8],[0,-28,-26,19,27],[1,-24,-4,13,23],[0,0,-36,29,22],[0,24,-40,23,14],[1,47,-33,12,21],[0,66,-17,12,15],[3,72,6,12,19],[0,-33,-65,13,9],[2,-18,-69,10,7],[0,0,-66,12,8],[3,-52,42,9,19],[3,-35,50,8,21],[3,-22,48,8,18],[3,-9,39,7,15],[3,-16,18,17,20],[3,9,29,22,30],[3,34,28,20,24],[1,11,9,6,23],[1,36,12,5,20],[3,51,11,12,18],[0,-45,-20,12,11],[1,-54,-36,7,16],[2,-60,-48,9,6],[3,58,-48,8,12],[3,39,-57,7,10],[3,20,-60,6,10]];
+ const meshes=layout.map(([type,x,y,sx,sy],i)=>{const m=new T.Mesh(geometries[type],materials[i%4]);m.userData={target:new T.Vector3(x,y,0),start:new T.Vector3(Math.cos(i*2.399)* (165+i%4*25),Math.sin(i*2.399)*(125+i%3*25),40+i%5*20),sx,sy};const edges=new T.LineSegments(new T.EdgesGeometry(geometries[type],25),new T.LineBasicMaterial({color:0xb4f1ff,transparent:true,opacity:.5}));m.add(edges);scene.add(m);return m;});
+ const clamp=n=>Math.max(0,Math.min(1,n));
+ return {update(t){const visible=t>=5.5&&t<8.65;renderer.domElement.style.display=visible?'block':'none';if(!visible)return;const fade=1-clamp((t-8.05)/.6);materials.forEach(m=>m.opacity=fade);meshes.forEach((m,i)=>{const d=m.userData,p=clamp((t-5.75-i*.022)/1.75),e=p*p*(3-2*p);m.position.lerpVectors(d.start,d.target,e);m.scale.set(d.sx,d.sy,d.sx*.7);m.rotation.set((1-e)*(t+i)*.7,(1-e)*(t-i)*.8,(1-e)*i*.5);m.children[0].material.opacity=.5*fade;});renderer.render(scene,camera);},dispose(){geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());meshes.forEach(m=>{m.children[0].geometry.dispose();m.children[0].material.dispose();});renderer.dispose();renderer.domElement.remove();}};
+}

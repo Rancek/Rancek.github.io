@@ -77,3 +77,7 @@ La presentación utiliza las ilustraciones, los contornos y el sprite animado or
 La secuencia está en `brand-intro-2d.js` y sus recursos locales en `assets/opening-2d/`, con la procedencia en `SOURCE.txt`. Dura aproximadamente 16 segundos, admite «Saltar presentación», movimiento reducido y una salida de respaldo si falla una carga. Para revisar un instante concreto se puede añadir `?cinematic-frame=8.8`; sin ese parámetro se reproduce normalmente.
 
 El portal y el resto del portafolio conservan sus efectos anteriores. La versión anterior de la apertura 3D ya no se carga.
+
+### Actualización 32 — ensamblaje del dragón
+La presentación reúne esferas, cilindros, cubos y pirámides 3D en el centro y hace una transición a la animación original del dragón. El sprite conserva su dibujo y usa capas de profundidad y sombras para un relieve visual en azul/cian. No se sustituye por una escultura diferente.
+
