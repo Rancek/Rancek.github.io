@@ -93,6 +93,8 @@ async function buildIntro(){
  for(let i=0;i<4;i++){const finger=new T.Group();finger.position.set(-.31+i*.207,.29,0);finger.rotation.z=(1.5-i)*.07;g.add(finger);const bent=pose==='fist'||(pose==='peace'&&i>1)||(pose==='point'&&i>0);let parent=finger;for(let j=0;j<3;j++){const joint=new T.Group();joint.rotation.x=bent?-(j===0?.95:1.25):-.08;parent.add(joint);const length=[.34,.38,.36,.28][i]*(j===2?.7:1);mesh(joint,'ball',flesh,[0,length*.46,0],[.091-j*.012,length*.6,.093-j*.011]);mesh(joint,'ball',flesh,[0,0,0],[.094-j*.012,.085,.092-j*.011]);if(j===2)mesh(joint,'ball',nail,[0,length*.65,.07-j*.01],[.055,.071,.012]);const next=new T.Group();next.position.y=length*.86;joint.add(next);parent=next;}}
  const thumb=new T.Group();thumb.position.set(-.35,-.15,.06);thumb.rotation.z=pose==='fist'?-.2:-.7;thumb.rotation.x=pose==='fist'?-.9:0;mesh(thumb,'ball',flesh,[0,.25,0],[.13,.35,.12]);mesh(thumb,'ball',nail,[0,.46,.105],[.071,.085,.012]);g.add(thumb);return g;}
  // User OBJ files replace all generated human/anatomical props.
+ const props=[];
+ async function loadProps(){
  const objLoader=new OBJLoader();
  const gunMetal=surface('metal',0x4a5056,.5,.7),polymer=surface('rubber',0x202630,.9,.02);
  const babySkin=surface('skin',0xd9ad95,.83),eyeWhite=material(0xe6e5df,0,.28);
@@ -118,15 +120,17 @@ async function buildIntro(){
   const holder=new T.Group();holder.add(pivot);return holder;
  }));
  const dragons=await loadDragons(renderer);
- const makers=[()=>imported[0].clone(true),()=>mammal(),naturalHouse,()=>imported[1].clone(true),()=>mammal(true),bird,naturalChair,naturalBall,()=>imported[2].clone(true),()=>dragons[0].clone(true),()=>dragons[1].clone(true)];const props=[];
+ const makers=[()=>imported[0].clone(true),()=>mammal(),naturalHouse,()=>imported[1].clone(true),()=>mammal(true),bird,naturalChair,naturalBall,()=>imported[2].clone(true),()=>dragons[0].clone(true),()=>dragons[1].clone(true)];
  for(let i=0;i<18;i++){const g=makers[i%makers.length]();g.userData={phase:i/18,angle:i*2.39996,size:.8+(i%4)*.14};scene.add(g);props.push(g);}
+
+ }
  const tunnel=[];const railMat=new T.MeshStandardMaterial({color:0x087daa,emissive:0x035078,emissiveIntensity:.4,metalness:.6,roughness:.3});
  for(let i=0;i<18;i++){const ring=new T.Mesh(new T.TorusGeometry(13,.025,6,8),railMat);scene.add(ring);tunnel.push(ring);}
  const avatar=new T.Group();scene.add(avatar);
  const button=new T.Group();const shape=new T.Shape();shape.moveTo(-2.25,0);shape.lineTo(-1.95,.52);shape.lineTo(1.95,.52);shape.lineTo(2.25,0);shape.lineTo(1.95,-.52);shape.lineTo(-1.95,-.52);shape.closePath();
  const bevel=new T.ExtrudeGeometry(shape,{depth:.25,bevelEnabled:true,bevelSize:.08,bevelThickness:.08,bevelSegments:3,steps:1});const buttonMesh=new T.Mesh(bevel,[dark,cyan]);button.add(buttonMesh);button.visible=false;scene.add(button);
  const logos=[];const loader=new SVGLoader();
- await Promise.all([...intro.querySelectorAll('.launch-icon')].map(async(img,i)=>{try{let svg=await (await fetch(img.getAttribute('src'))).text();
+ void Promise.all([...intro.querySelectorAll('.launch-icon')].map(async(img,i)=>{try{let svg=await (await fetch(img.getAttribute('src'))).text();
  const xml=new DOMParser().parseFromString(svg,'image/svg+xml');
  svg=svg.replace(/url\(#([^)]+)\)/g,(_,id)=>{const gradient=xml.getElementById(id);const stops=gradient?.querySelectorAll('stop');const stop=stops?.[Math.floor(stops.length/2)];return stop?.getAttribute('stop-color')||'#249ba5';});
  const data=loader.parse(svg);const g=new T.Group();data.paths.forEach((path,layer)=>{const color=path.color.clone();if(['zbrush','unity'].some(n=>img.classList.contains('logo-'+n)))color.set(0xe9f3ff);const mat=material(color,.3,.32);SVGLoader.createShapes(path).forEach(shape=>{const part=new T.Mesh(new T.ExtrudeGeometry(shape,{depth:7,bevelEnabled:true,bevelThickness:.3,bevelSize:.2,bevelSegments:2,steps:1}),mat);part.position.z=layer*.15;g.add(part);});});const bounds=new T.Box3().setFromObject(g),size=bounds.getSize(new T.Vector3()),center=bounds.getCenter(new T.Vector3());g.children.forEach(m=>m.position.sub(center));g.scale.setScalar(1.15/Math.max(size.x,size.y));g.scale.y*=-1;const pivot=new T.Group();pivot.add(g);pivot.visible=false;scene.add(pivot);logos[i]=pivot;}catch(e){console.warn('Logo 3D no disponible',e);}}));
@@ -150,4 +154,5 @@ async function buildIntro(){
  renderer.render(scene,camera);if(!reduced.matches)raf=requestAnimationFrame(draw);}
  function resume(){cancelAnimationFrame(raf);last=0;if(intro.open&&!document.hidden)raf=requestAnimationFrame(draw);}
  resize();window.addEventListener('resize',()=>{resize();resume();});document.addEventListener('visibilitychange',resume);intro.addEventListener('close',()=>{cancelAnimationFrame(raf);renderer.dispose();});reduced.addEventListener('change',resume);intro.addEventListener('cinematic-end',resume);resume();
+ setTimeout(()=>loadProps().catch(e=>console.warn('Modelos secundarios no disponibles',e)),0);
 }

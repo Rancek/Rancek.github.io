@@ -81,3 +81,7 @@ El portal y el resto del portafolio conservan sus efectos anteriores. La versió
 ### Actualización 32 — ensamblaje del dragón
 La presentación reúne esferas, cilindros, cubos y pirámides 3D en el centro y hace una transición a la animación original del dragón. El sprite conserva su dibujo y usa capas de profundidad y sombras para un relieve visual en azul/cian. No se sustituye por una escultura diferente.
 
+
+### Actualización 33
+Túnel inicial independiente de la carga de modelos pesados. Studios Conari con logo superior, perfil y pestañas accesibles para seis áreas de participación. Bebé y báculo decorativos reaccionan al sentido del desplazamiento; se ocultan con movimiento reducido.
+
