@@ -88,3 +88,57 @@
 .baby-traveller{width:90px;height:180px;bottom:-22px}@media(max-width:500px){.baby-traveller{width:75px;height:150px;bottom:-18px}}
 
 .welcome .loader-panel h2{animation:none;filter:none;opacity:1;transform:none}
+
+/* Sculpted console entrance, inspired by the supplied handheld/arcade references. */
+.portal-loader{perspective:1400px;background:radial-gradient(ellipse at 50% 40%,#133454,#050912 72%);overflow:auto}
+.portal-loader:before{content:"";position:fixed;inset:55% -30% -40%;background:linear-gradient(#1cbfff20 1px,transparent 1px),linear-gradient(90deg,#1cbfff20 1px,transparent 1px);background-size:65px 65px;transform:rotateX(62deg);mask-image:linear-gradient(transparent,#000);pointer-events:none}
+.loader-panel{position:relative;width:min(800px,100%);padding:25px 28px 18px;border:2px solid #58b5d1;border-radius:28px;background:linear-gradient(130deg,#24445f,#102439 35%,#071526 65%,#24516e);box-shadow:0 3px 0 #9beaff80,inset 0 2px 1px #d8faff60,inset 0 -5px 8px #0008,0 12px 0 #061424,0 15px 0 #236082,0 36px 60px #000b;transform:rotateX(5deg);transform-style:preserve-3d}
+.console-brand{display:flex;justify-content:space-between;gap:20px;text-align:left;color:#68dcff;font-size:10px;letter-spacing:2px;padding:0 4px 19px}.console-brand span:first-child{font-size:17px;font-weight:900;color:#e1fbff;text-shadow:0 2px #037da0,0 4px #021425}
+.console-screen{position:relative;border:10px solid #030c18;border-radius:17px;padding:22px 28px 12px;background:radial-gradient(ellipse at 50% 80%,#164b67,#050d1d 80%);box-shadow:0 2px 0 #72d8ed60,0 -2px 0 #000,inset 0 0 30px #000c;overflow:hidden;transform:translateZ(8px)}
+.console-screen:after{content:"";position:absolute;inset:0;background:linear-gradient(125deg,#b4f7ff10,transparent 40%,#7bddff08);pointer-events:none;border-radius:8px}
+.console-controls{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:23px 20px 8px;transform:translateZ(20px)}
+.console-joystick{width:72px;height:32px;border-radius:50%;background:linear-gradient(#294d68,#030c19);box-shadow:0 5px 0 #020713,0 8px 12px #0009;position:relative}
+.console-joystick:before{content:"";position:absolute;width:13px;height:40px;background:linear-gradient(90deg,#081723,#86bfd5,#0a213b);left:29px;bottom:13px;transform:rotate(-10deg);transform-origin:bottom}
+.console-joystick i{position:absolute;left:15px;bottom:42px;width:35px;height:35px;background:radial-gradient(circle at 30% 22%,#d5ffff,#20cef4 24%,#07658d 65%,#021523);border-radius:50%;box-shadow:0 0 18px #20d5ff50}
+.console-control-copy{font-size:11px;color:#abeaff;letter-spacing:2px}.console-hint{display:block;font-size:10px;letter-spacing:.5px;margin-top:8px;color:#94aebf}.console-led{display:inline-block;width:7px;height:7px;border-radius:50%;background:#33556c;margin-right:5px}
+.console-on .console-led{background:#6efaff;box-shadow:0 0 12px #3beaff}
+.console-power{display:grid;place-items:center;width:92px;height:73px;border-radius:16px;border:1px solid #a5f5ff;background:linear-gradient(#2ebcdf,#09628b);color:#e9fdff;font-size:28px;box-shadow:0 7px 0 #02324c,0 9px 0 #011422,0 13px 18px #0008,inset 0 2px #ceffff70;cursor:pointer;transition:transform .15s,box-shadow .15s}.console-power span{font-size:9px;letter-spacing:1px;font-weight:800}.console-power:active{transform:translateY(5px);box-shadow:0 2px 0 #02324c}.console-power:focus-visible{outline:2px solid white;outline-offset:5px}.console-power:disabled{cursor:default;opacity:.75}
+.portal-loader:not(.console-on) .baby-walk{animation-play-state:paused}.console-screen .baby-walk{filter:drop-shadow(2px 2px 0 #073c59) drop-shadow(3px 5px 0 #031323) drop-shadow(0 0 8px #4bdfff70)}
+.console-screen .loader-meter{height:32px;border-radius:5px;box-shadow:0 5px 0 #073448,0 7px 0 #020711,0 0 18px #00bfff60,inset 0 2px 5px #000}.console-screen .loader-fill{background:repeating-linear-gradient(90deg,#85faff 0 12px,#169abc 12px 16px);border-top:3px solid #d8ffff}
+.loader-panel>.loader-skip{margin-top:18px;border:0;padding:7px;background:transparent;font-size:11px;color:#9cbbcd}.console-complete{animation:console-exit .9s ease-in forwards}@keyframes console-exit{70%{opacity:1;transform:scale(1.02)}100%{opacity:0;transform:scale(1.12)}}
+@media(max-width:600px){.loader-panel{padding:18px 12px 12px;border-radius:20px}.console-screen{padding:15px 12px 10px;border-width:7px}.console-brand{font-size:8px;letter-spacing:1px}.console-brand span:first-child{font-size:14px}.console-controls{padding:24px 10px 4px;gap:10px}.console-control-copy{font-size:9px;letter-spacing:1px}.console-power{width:75px;height:66px}.console-joystick{transform:scale(.8)}.console-hint{max-width:140px}.welcome .loader-panel h2{font-size:22px}}
+@media(max-height:650px){.loader-panel{margin:15px 0}.console-screen .baby-track{height:105px}.console-screen .baby-traveller{height:140px;width:70px}.console-screen{padding-top:10px}.console-controls{padding-top:18px}.welcome .loader-panel h2{margin:8px 0;font-size:22px}}
+@media(prefers-reduced-motion:reduce){.loader-panel{transform:none}.console-complete{animation:none}}
+
+.welcome.is-loading{overflow:hidden}.portal-loader{overflow-x:clip}.power-symbol{display:block;width:22px;height:22px;border:3px solid #e9fdff;border-top-color:transparent;border-radius:50%;position:relative}.power-symbol:after{content:"";position:absolute;width:3px;height:13px;background:#e9fdff;left:7px;top:-6px;border-radius:2px}@media(min-height:651px){.loader-panel{max-height:calc(100dvh - 64px)}.console-screen .baby-track{height:135px}}
+/* Full-screen opening film: constellation, staff impact, dragon and brand reveal. */
+.brand-cinematic{position:fixed;inset:0;z-index:60;background:radial-gradient(ellipse at 50% 45%,#123956 0,#07192b 38%,#020713 77%);overflow:hidden;isolation:isolate;opacity:var(--film-fade,1);color:#aeefff}
+.welcome:not(.is-loading) .brand-cinematic{display:none}
+.cinematic-stage{position:absolute;inset:0}.cinematic-stage canvas{display:block;width:100%;height:100%}
+.brand-cinematic:before{content:"";position:absolute;inset:12px;border:1px solid #64dfff1c;pointer-events:none;z-index:2;clip-path:polygon(0 0,28px 0,28px 1px,calc(100% - 28px) 1px,calc(100% - 28px) 0,100% 0,100% 100%,0 100%)}
+.cinematic-title{position:absolute;top:50%;left:50%;transform:translate(-50%,-34%) scale(.86);width:90%;text-align:center;opacity:0;filter:blur(8px);transition:opacity 1.25s,transform 1.6s,filter 1.1s;pointer-events:none}
+.show-brand .cinematic-title{opacity:1;transform:translate(-50%,-34%) scale(1);filter:blur(0)}
+.cinematic-title span{display:block;letter-spacing:.65em;font-size:clamp(12px,1.6vw,20px);padding-left:.65em;color:#b5edff;margin-bottom:14px}
+.cinematic-title strong{display:block;font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(44px,9vw,116px);letter-spacing:.14em;padding-left:.14em;line-height:1.1;color:#c4f5ff;text-shadow:0 1px #8ddaff,0 2px #3983aa,0 3px #286388,0 4px #19445f,0 5px #10314c,0 9px 15px #000,0 0 40px #31adff70}
+.cinematic-title i{display:block;font-size:clamp(9px,1vw,12px);font-style:normal;letter-spacing:.35em;color:#6faccc;margin-top:24px}
+.cinematic-footer{position:absolute;left:20px;right:20px;bottom:24px;text-align:center;z-index:3;display:flex;flex-direction:column;align-items:center;gap:12px}
+.welcome .cinematic-status{font-size:11px!important;line-height:1.5!important;font-weight:400!important;letter-spacing:.08em!important;color:#90b6d0!important;text-shadow:none!important;margin:0!important}
+.cinematic-progress{height:2px;width:160px;background:#23638138;overflow:hidden}.cinematic-progress i{display:block;height:100%;background:#81e6ff;box-shadow:0 0 12px #45cfff;transform:scaleX(0);transform-origin:left}
+.cinematic-skip{padding:9px 14px;background:transparent;border:1px solid #5dcfff30;border-radius:4px;color:#8ecbe6;font:inherit;font-size:11px;cursor:pointer;letter-spacing:.08em;transition:background .2s,color .2s}.cinematic-skip:hover{background:#23789f25;color:white}.cinematic-skip:focus-visible{outline:2px solid #b8f3ff;outline-offset:4px}
+@media(max-width:600px){.cinematic-footer{bottom:20px}.cinematic-title{top:49%}.cinematic-title span{letter-spacing:.45em}.cinematic-title i{letter-spacing:.18em;margin-top:18px}}
+@media(prefers-reduced-motion:reduce){.cinematic-title{transition:none;filter:none}.cinematic-progress{display:none}}
+/* Original two-dimensional artwork; no extrusion or reconstructed central figure. */
+.opening-flat{background:radial-gradient(ellipse at 50% 42%,#103957 0,#07192b 42%,#020713 80%)}
+.flat-stars{position:absolute;inset:0;width:100%;height:100%}.flat-world{position:absolute;width:1000px;height:650px;left:50%;top:46%;transform-origin:center}
+.flat-constellation{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#63ceff;stroke-width:1;opacity:.4}.flat-constellation line{stroke-dasharray:1;stroke-dashoffset:1}
+.flat-symbol{position:absolute;width:145px;height:145px;left:0;top:0;opacity:0}.flat-symbol svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;fill:none;stroke:#77d9ff;stroke-width:1.1;filter:drop-shadow(0 0 4px #3aabff70)}
+.flat-symbol-color{position:absolute;inset:0;background:#86ddff;mask-size:contain;mask-repeat:no-repeat;mask-position:center;-webkit-mask-size:contain;-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;opacity:0;filter:drop-shadow(0 0 5px #199fff60)}
+.flat-dragon-drawing{position:absolute;left:373px;top:205px;width:254px;height:240px}.flat-dragon-drawing svg{width:100%;height:100%;fill:none;stroke:#b5eaff;stroke-width:1.15;filter:drop-shadow(0 0 5px #36bcff80)}
+.flat-dragon{position:absolute;left:0;top:0;width:254px;height:240px;opacity:0}.flat-dragon-sprite{width:100%;height:100%;background:url('assets/opening-2d/dragon-rosa.webp') 0 0/900% 100% no-repeat}
+.flat-official-logo{position:absolute;width:620px;height:362px;left:190px;top:144px;opacity:0}.flat-logo-piece{position:absolute;inset:0;background:#9ee8ff;mask-size:100% 100%;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;-webkit-mask-repeat:no-repeat;filter:drop-shadow(0 0 7px #198dea60)}.flat-logo-conari{background:#e4f8ff}.flat-logo-studios{background:#8bdfff}
+.flat-magic-wave{position:absolute;left:500px;top:325px;width:120px;height:120px;border:1px solid #a5edff;border-radius:50%;box-shadow:0 0 18px #54bcff60;opacity:0;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.flat-dragon,.flat-dragon-drawing,.flat-symbol,.flat-magic-wave,.flat-constellation{display:none}}
+
+/* Recolor the original sprite without changing its shape or animation. */
+.flat-dragon-sprite{filter:grayscale(1) sepia(1) saturate(5) hue-rotate(155deg) drop-shadow(0 0 7px #39bfff66)}
+

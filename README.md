@@ -69,3 +69,11 @@ Los archivos de audio originales se conservan sin modificaciones en assets/audio
 Los sonidos de Comenzar y de los marcos se detienen al retirar el puntero. Al volver a entrar se reproducen desde el principio. Comenzar también detiene su sable al hacer clic; los blásteres de la transición conservan su sincronización independiente.
 
 Audios actualizados a las versiones proporcionadas sable de luz_final.mp3 y Blaster_Final.mp3, conservados íntegros bajo los nombres de assets/audio/.
+
+
+## Apertura 2D — versión 30
+La presentación utiliza las ilustraciones, los contornos y el sprite animado originales de Studios Conari presentes en https://manecist.github.io/. El dragón mantiene intactos su dibujo y animación; sus colores se adaptan a azul y cian mediante un filtro de presentación; los símbolos y las piezas originales del logotipo se presentan en cian mediante estilos de pantalla, sin redibujarlos. Aparecen uno a uno, se dibuja el dragón central y después vuela para revelar el nombre del estudio antes del portal.
+
+La secuencia está en `brand-intro-2d.js` y sus recursos locales en `assets/opening-2d/`, con la procedencia en `SOURCE.txt`. Dura aproximadamente 16 segundos, admite «Saltar presentación», movimiento reducido y una salida de respaldo si falla una carga. Para revisar un instante concreto se puede añadir `?cinematic-frame=8.8`; sin ese parámetro se reproduce normalmente.
+
+El portal y el resto del portafolio conservan sus efectos anteriores. La versión anterior de la apertura 3D ya no se carga.

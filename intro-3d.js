@@ -139,7 +139,7 @@ async function buildIntro(){
  const directions=[];
  intro.addEventListener('tunnel-launch',()=>{start=performance.now();logos.forEach((logo,i)=>{if(!logo)return;const a=-Math.PI/2+i*Math.PI*2/7;directions[i]=a+(Math.random()-.5)*.3;});});
  startButton.addEventListener('pointerenter',()=>hover=true);startButton.addEventListener('pointerleave',()=>hover=false);
- function draw(now){raf=0;if(!intro.open||document.hidden)return;const dt=Math.min((now-(last||now))/1000,.05);last=now;const t=start?(now-start)/1000:0,rush=Math.max(0,t-1.46);travel+=reduced.matches?0:dt*(start?4+rush*30:2.2);
+ function draw(now){raf=0;if(!intro.open||document.hidden||intro.classList.contains("is-loading"))return;const dt=Math.min((now-(last||now))/1000,.05);last=now;const t=start?(now-start)/1000:0,rush=Math.max(0,t-1.46);travel+=reduced.matches?0:dt*(start?4+rush*30:2.2);
  props.forEach((g,i)=>{const d=g.userData,z=-75+((d.phase*75+travel)%75);g.position.set(Math.cos(d.angle)*(9+i%3),Math.sin(d.angle)*(8+i%2),z);g.scale.setScalar(d.size);g.rotation.set(Math.sin(travel*.07+i)*.25,travel*.1+i,Math.sin(i)*.13);});
  tunnel.forEach((g,i)=>{g.position.z=-85+((i*5+travel)%90);});
  const unit=align(avatar,intro.querySelector('.welcome-avatar'),3.8);avatar.position.y-=avatar.scale.x*.4;avatar.rotation.y=reduced.matches?-.12:Math.sin(now*.00045)*.16;avatar.rotation.x=.03;
@@ -149,5 +149,5 @@ async function buildIntro(){
  if(sparks.visible){sparks.position.copy(avatar.position);sparks.children.forEach(m=>{const r=rush*m.userData.speed;m.position.set(Math.cos(m.userData.angle)*r,Math.sin(m.userData.angle)*r,1+rush*2);m.scale.set(1,1,Math.max(1,rush*8));});}
  renderer.render(scene,camera);if(!reduced.matches)raf=requestAnimationFrame(draw);}
  function resume(){cancelAnimationFrame(raf);last=0;if(intro.open&&!document.hidden)raf=requestAnimationFrame(draw);}
- resize();window.addEventListener('resize',()=>{resize();resume();});document.addEventListener('visibilitychange',resume);intro.addEventListener('close',()=>{cancelAnimationFrame(raf);renderer.dispose();});reduced.addEventListener('change',resume);resume();
+ resize();window.addEventListener('resize',()=>{resize();resume();});document.addEventListener('visibilitychange',resume);intro.addEventListener('close',()=>{cancelAnimationFrame(raf);renderer.dispose();});reduced.addEventListener('change',resume);intro.addEventListener('cinematic-end',resume);resume();
 }
