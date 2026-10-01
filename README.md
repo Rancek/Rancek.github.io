@@ -85,3 +85,7 @@ La presentación reúne esferas, cilindros, cubos y pirámides 3D en el centro y
 ### Actualización 33
 Túnel inicial independiente de la carga de modelos pesados. Studios Conari con logo superior, perfil y pestañas accesibles para seis áreas de participación. Bebé y báculo decorativos reaccionan al sentido del desplazamiento; se ocultan con movimiento reducido.
 
+
+### Actualización 34
+Bebé frontal con poses de reposo, caída asustada con brazos levantados y vuelo con capa. Regresa a reposo al detener el desplazamiento; conserva el báculo acompañante.
+

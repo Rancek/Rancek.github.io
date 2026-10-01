@@ -151,3 +151,11 @@
 @media(max-width:650px){.studio-profile{flex-direction:column;align-items:flex-start}.studio-profile>img{align-self:center}.studio-disciplines{grid-template-columns:repeat(2,1fr)}.studio-copy [role=tabpanel]{padding:20px}.studio-tablist button{padding:9px 12px}.scroll-companion{right:0;transform:translateY(var(--travel,0px)) scale(.65);transform-origin:right center;opacity:.8}}
 @media(prefers-reduced-motion:reduce){.scroll-companion,.companion-baby,.companion-staff{transition:none}.scroll-companion{display:none}}
 .studio-tabs-section .studio-image{border-right:0;padding:20px;min-height:0;max-width:620px}.studio-tabs-section .studio-image img{width:100%;height:auto;max-height:300px;object-fit:contain}.studio-tabs-section .studio-copy{padding-top:0}.studio-tabs-section .studio-copy h4{margin:18px 0 12px}
+/* Frontal baby: neutral, startled fall, caped flight. */
+.companion-baby{left:-20px;top:6px;width:112px;height:122px;background-image:url('assets/baby-states.png');background-size:300% 100%;background-position:0% 50%;transition:none}
+.scroll-companion[data-direction=idle] .companion-baby{background-position:0% 50%;transform:none;animation:companion-breathe 2.4s ease-in-out infinite}
+.scroll-companion[data-direction=down] .companion-baby{background-position:50% 50%;transform:none;animation:companion-fall .38s ease-in-out infinite alternate}
+.scroll-companion[data-direction=up] .companion-baby{background-position:100% 50%;transform:none;animation:companion-soar .5s ease-in-out infinite alternate}
+@keyframes companion-fall{from{transform:translateY(-3px) rotate(-4deg)}to{transform:translateY(5px) rotate(4deg)}}
+@keyframes companion-soar{from{transform:translate(-2px,3px) rotate(-3deg)}to{transform:translate(2px,-5px) rotate(1deg)}}
+@keyframes companion-breathe{50%{transform:translateY(-2px)}}
