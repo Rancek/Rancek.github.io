@@ -101,3 +101,7 @@ El dragón se acerca al símbolo del sol y la luna, completa una vuelta y sale h
 ### Actualización 37
 La revelación del logo sigue la posición horizontal del dragón: comienza al llegar al borde derecho del logo y ya está a mitad cuando cruza el centro.
 
+
+## Autoría y condiciones de uso
+© 2026 Elias Alejandro Medel Collao — **By Rancek**. Todos los derechos reservados sobre sus aportes propios. Consulta [LICENSE.md](LICENSE.md). Los recursos de terceros conservan sus respectivas licencias y titulares.
+
