@@ -89,3 +89,11 @@ Túnel inicial independiente de la carga de modelos pesados. Studios Conari con 
 ### Actualización 34
 Bebé frontal con poses de reposo, caída asustada con brazos levantados y vuelo con capa. Regresa a reposo al detener el desplazamiento; conserva el báculo acompañante.
 
+
+### Actualización 35
+El dragón sale completamente por la izquierda, reaparece desde fuera del borde derecho y revela el logo al cruzar el centro. Los límites se calculan según el ancho de la pantalla.
+
+
+### Actualización 36
+El dragón se acerca al símbolo del sol y la luna, completa una vuelta y sale hacia la izquierda desde ese punto. Conserva su reentrada por la derecha y la revelación central del logo.
+
