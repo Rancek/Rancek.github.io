@@ -49,8 +49,11 @@ async function start(){
   if(t>=12.7){const p=clamp((t-12.7)/1.8);x=rightEdge+(leftEdge-rightEdge)*p;y=325;size=.75;flip=1;}
   dragon.style.opacity=t>=8.05&&t<14.55?smooth((t-8.05)/.6):0;dragon.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%) scale(${size})`;relief.style.transform=`scaleX(${flip})`;const spriteFrame=t<8.7?0:Math.floor(t*14)%9;[sprite,...depths].forEach(el=>el.style.backgroundPosition=`${spriteFrame/8*100}% 0`);
   // Use the original layered wordmark: its shapes and proportions are never redrawn.
-  logo.style.opacity=smooth((t-13.6)/.35);parts.luna.style.opacity=smooth((t-13.6)/.4);parts.base.style.opacity=smooth((t-14.1)/.5);
-  const reveal=100*(1-clamp((t-13.6)/.75));['lineas','studios','conari'].forEach(n=>parts[n].style.clipPath=`inset(0 0 0 ${reveal}%)`);
+  // Reveal follows the dragon across the wordmark instead of a delayed timer.
+  const logoWidth=logo.offsetWidth||460;
+  const revealProgress=t>=12.7?clamp((500+logoWidth/2-x)/logoWidth):0;
+  logo.style.opacity=clamp(revealProgress*5);
+  for(const part of Object.values(parts)){part.style.opacity=1;part.style.clipPath=`inset(0 0 0 ${100*(1-revealProgress)}%)`;}
   host.style.setProperty('--film-fade',1-smooth((t-16.5)/.8));progress.style.transform=`scaleX(${clamp(t/17.3)})`;
   if((reduced&&elapsed>1.6)||(!reduced&&preview===null&&t>=17.3)){finish();return;}raf=requestAnimationFrame(frame);
  }raf=requestAnimationFrame(frame);

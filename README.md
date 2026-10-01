@@ -97,3 +97,7 @@ El dragón sale completamente por la izquierda, reaparece desde fuera del borde 
 ### Actualización 36
 El dragón se acerca al símbolo del sol y la luna, completa una vuelta y sale hacia la izquierda desde ese punto. Conserva su reentrada por la derecha y la revelación central del logo.
 
+
+### Actualización 37
+La revelación del logo sigue la posición horizontal del dragón: comienza al llegar al borde derecho del logo y ya está a mitad cuando cruza el centro.
+
