@@ -135,7 +135,7 @@
 .flat-symbol-color{position:absolute;inset:0;background:#86ddff;mask-size:contain;mask-repeat:no-repeat;mask-position:center;-webkit-mask-size:contain;-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;opacity:0;filter:drop-shadow(0 0 5px #199fff60)}
 .flat-dragon-drawing{position:absolute;left:373px;top:205px;width:254px;height:240px}.flat-dragon-drawing svg{width:100%;height:100%;fill:none;stroke:#b5eaff;stroke-width:1.15;filter:drop-shadow(0 0 5px #36bcff80)}
 .flat-dragon{position:absolute;left:0;top:0;width:254px;height:240px;opacity:0}.flat-dragon-sprite{width:100%;height:100%;background:url('assets/opening-2d/dragon-rosa.webp') 0 0/900% 100% no-repeat}
-.flat-official-logo{position:absolute;width:620px;height:362px;left:190px;top:144px;opacity:0}.flat-logo-piece{position:absolute;inset:0;background:#9ee8ff;mask-size:100% 100%;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;-webkit-mask-repeat:no-repeat;filter:drop-shadow(0 0 7px #198dea60)}.flat-logo-conari{background:#e4f8ff}.flat-logo-studios{background:#8bdfff}
+.flat-official-logo{position:absolute;width:620px;height:362px;left:190px;top:144px;opacity:0}.flat-logo-piece{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:none;filter:none}
 .flat-magic-wave{position:absolute;left:500px;top:325px;width:120px;height:120px;border:1px solid #a5edff;border-radius:50%;box-shadow:0 0 18px #54bcff60;opacity:0;pointer-events:none}
 @media(prefers-reduced-motion:reduce){.flat-dragon,.flat-dragon-drawing,.flat-symbol,.flat-magic-wave,.flat-constellation{display:none}}
 
@@ -159,3 +159,6 @@
 @keyframes companion-fall{from{transform:translateY(-3px) rotate(-4deg)}to{transform:translateY(5px) rotate(4deg)}}
 @keyframes companion-soar{from{transform:translate(-2px,3px) rotate(-3deg)}to{transform:translate(2px,-5px) rotate(1deg)}}
 @keyframes companion-breathe{50%{transform:translateY(-2px)}}
+
+/* The prepared portal is visible beneath the outgoing cinematic during the dissolve. */
+.welcome.is-loading.portal-revealing .welcome-content,.welcome.is-loading.portal-revealing>.sound-toggle{visibility:visible}

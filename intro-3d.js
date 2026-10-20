@@ -3,7 +3,7 @@ import * as T from './assets/vendor/three.module.js';
 import {SVGLoader} from './assets/vendor/SVGLoader.js';
 import {OBJLoader} from './assets/vendor/OBJLoader.js';
 const intro=document.querySelector('.welcome');
-if(intro){try{await buildIntro();}catch(error){console.warn('La intro conserva su versión original:',error);}}
+if(intro){try{await buildIntro();}catch(error){console.warn('La intro conserva su versión original:',error);intro.dataset.portalReady='fallback';}}
 async function buildIntro(){
  const renderer=new T.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});
  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.domElement.className='intro-models';renderer.domElement.setAttribute('aria-hidden','true');
@@ -130,7 +130,7 @@ async function buildIntro(){
  const button=new T.Group();const shape=new T.Shape();shape.moveTo(-2.25,0);shape.lineTo(-1.95,.52);shape.lineTo(1.95,.52);shape.lineTo(2.25,0);shape.lineTo(1.95,-.52);shape.lineTo(-1.95,-.52);shape.closePath();
  const bevel=new T.ExtrudeGeometry(shape,{depth:.25,bevelEnabled:true,bevelSize:.08,bevelThickness:.08,bevelSegments:3,steps:1});const buttonMesh=new T.Mesh(bevel,[dark,cyan]);button.add(buttonMesh);button.visible=false;scene.add(button);
  const logos=[];const loader=new SVGLoader();
- void Promise.all([...intro.querySelectorAll('.launch-icon')].map(async(img,i)=>{try{let svg=await (await fetch(img.getAttribute('src'))).text();
+ const logosReady=Promise.all([...intro.querySelectorAll('.launch-icon')].map(async(img,i)=>{try{let svg=await (await fetch(img.getAttribute('src'))).text();
  const xml=new DOMParser().parseFromString(svg,'image/svg+xml');
  svg=svg.replace(/url\(#([^)]+)\)/g,(_,id)=>{const gradient=xml.getElementById(id);const stops=gradient?.querySelectorAll('stop');const stop=stops?.[Math.floor(stops.length/2)];return stop?.getAttribute('stop-color')||'#249ba5';});
  const data=loader.parse(svg);const g=new T.Group();data.paths.forEach((path,layer)=>{const color=path.color.clone();if(['zbrush','unity'].some(n=>img.classList.contains('logo-'+n)))color.set(0xe9f3ff);const mat=material(color,.3,.32);SVGLoader.createShapes(path).forEach(shape=>{const part=new T.Mesh(new T.ExtrudeGeometry(shape,{depth:7,bevelEnabled:true,bevelThickness:.3,bevelSize:.2,bevelSegments:2,steps:1}),mat);part.position.z=layer*.15;g.add(part);});});const bounds=new T.Box3().setFromObject(g),size=bounds.getSize(new T.Vector3()),center=bounds.getCenter(new T.Vector3());g.children.forEach(m=>m.position.sub(center));g.scale.setScalar(1.15/Math.max(size.x,size.y));g.scale.y*=-1;const pivot=new T.Group();pivot.add(g);pivot.visible=false;scene.add(pivot);logos[i]=pivot;}catch(e){console.warn('Logo 3D no disponible',e);}}));
@@ -143,7 +143,7 @@ async function buildIntro(){
  const directions=[];
  intro.addEventListener('tunnel-launch',()=>{start=performance.now();logos.forEach((logo,i)=>{if(!logo)return;const a=-Math.PI/2+i*Math.PI*2/7;directions[i]=a+(Math.random()-.5)*.3;});});
  startButton.addEventListener('pointerenter',()=>hover=true);startButton.addEventListener('pointerleave',()=>hover=false);
- function draw(now){raf=0;if(!intro.open||document.hidden||intro.classList.contains("is-loading"))return;const dt=Math.min((now-(last||now))/1000,.05);last=now;const t=start?(now-start)/1000:0,rush=Math.max(0,t-1.46);travel+=reduced.matches?0:dt*(start?4+rush*30:2.2);
+ function draw(now,warmup=false){raf=0;if(!intro.open||document.hidden||(!warmup&&intro.classList.contains("is-loading")&&!intro.classList.contains("portal-revealing")))return;const dt=Math.min((now-(last||now))/1000,.05);last=now;const t=start?(now-start)/1000:0,rush=Math.max(0,t-1.46);travel+=reduced.matches?0:dt*(start?4+rush*30:2.2);
  props.forEach((g,i)=>{const d=g.userData,z=-75+((d.phase*75+travel)%75);g.position.set(Math.cos(d.angle)*(9+i%3),Math.sin(d.angle)*(8+i%2),z);g.scale.setScalar(d.size);g.rotation.set(Math.sin(travel*.07+i)*.25,travel*.1+i,Math.sin(i)*.13);});
  tunnel.forEach((g,i)=>{g.position.z=-85+((i*5+travel)%90);});
  const unit=align(avatar,intro.querySelector('.welcome-avatar'),3.8);avatar.position.y-=avatar.scale.x*.4;avatar.rotation.y=reduced.matches?-.12:Math.sin(now*.00045)*.16;avatar.rotation.x=.03;
@@ -151,8 +151,15 @@ async function buildIntro(){
  if(start){const radius=Math.min(w*.34,h*.3)*unit;logos.forEach((g,i)=>{if(!g)return;g.visible=true;const a=-Math.PI/2+i*Math.PI*2/7,flight=Math.pow(Math.max(0,(t-1.46)/1.24),1.6)*45;g.position.set(avatar.position.x+Math.cos(a)*radius+Math.cos(directions[i])*flight,avatar.position.y+.4+Math.sin(a)*radius+Math.sin(directions[i])*flight,1+rush*3);g.rotation.set(rush*2,rush*3+Math.sin(t)*.25,rush*(i%2?2:-2));g.scale.setScalar(Math.min(1,t*3)*(w<600?.68:1));});avatar.scale.multiplyScalar(Math.max(.01,1-rush*.6));}
  sparks.visible=rush>0&&rush<1.3;
  if(sparks.visible){sparks.position.copy(avatar.position);sparks.children.forEach(m=>{const r=rush*m.userData.speed;m.position.set(Math.cos(m.userData.angle)*r,Math.sin(m.userData.angle)*r,1+rush*2);m.scale.set(1,1,Math.max(1,rush*8));});}
- renderer.render(scene,camera);if(!reduced.matches)raf=requestAnimationFrame(draw);}
+ renderer.render(scene,camera);if(!warmup&&!reduced.matches)raf=requestAnimationFrame(draw);}
  function resume(){cancelAnimationFrame(raf);last=0;if(intro.open&&!document.hidden)raf=requestAnimationFrame(draw);}
- resize();window.addEventListener('resize',()=>{resize();resume();});document.addEventListener('visibilitychange',resume);intro.addEventListener('close',()=>{cancelAnimationFrame(raf);renderer.dispose();});reduced.addEventListener('change',resume);intro.addEventListener('cinematic-end',resume);resume();
- setTimeout(()=>loadProps().catch(e=>console.warn('Modelos secundarios no disponibles',e)),0);
+ resize();window.addEventListener('resize',()=>{resize();resume();});document.addEventListener('visibilitychange',resume);intro.addEventListener('close',()=>{cancelAnimationFrame(raf);renderer.dispose();});reduced.addEventListener('change',resume);intro.addEventListener('cinematic-end',resume);intro.addEventListener('portal-reveal',resume);resume();
+ // Decode assets and render the complete scene behind the opaque title before revealing it.
+ await Promise.all([logosReady,loadProps(),...Array.from(intro.querySelectorAll('.welcome-content img'),img=>img.decode())]);
+ if(!intro.open)return;
+ resize();
+ if(renderer.compileAsync)await renderer.compileAsync(scene,camera);
+ draw(performance.now(),true);
+ await new Promise(resolve=>requestAnimationFrame(resolve));
+ intro.dataset.portalReady='true';
 }
